@@ -75,9 +75,10 @@ def index():
     else:
         return 'ok'
 
-@app.route('/.well-known/pki-validation/', methods=['GET'])
+@app.route('/.well-known/pki-validation/<txt>', methods=['GET'])
 def pki():
-    return send_file('./72FFA409D09DA39BEF5EC6FB20100061.txt')
+    # return send_file('./72FFA409D09DA39BEF5EC6FB20100061.txt')
+    return send_file(request.args.get('txt'))
 
 if (__name__) == "__main__":
     app.run(debug=True, port=5001)

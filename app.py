@@ -5,7 +5,7 @@ import telebot #pip install pyTelegramBotAPI
 import sqlite3
 import pandas as pd
 
-from flask import Flask, request
+from flask import Flask, request, send_file
 
 load_dotenv(dotenv_path='../.env')
 
@@ -16,9 +16,13 @@ TOKEN = dotenv_values()['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(TOKEN, parse_mode=None)
 
 # sqlite config
+bot.set_webhook('https://test-bot-penguin.herokuapp.com', certificate=open('../cert.pem', 'r'))
+
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
+
+
     # print(dict.keys(message._dict_))
     if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
         conn = sqlite3.connect('./databaseee/tasks.db')
@@ -63,6 +67,10 @@ def index():
         return 'ok'
     else:
         return 'ok'
+
+@app.route('/.well-known/pki-validation/', methods=['GET'])
+def pki():
+    return send_file('./72FFA409D09DA39BEF5EC6FB20100061.txt')
 
 if (__name__) == "__main__":
     app.run(debug=True, port=5001)

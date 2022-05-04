@@ -25,14 +25,6 @@ bot.remove_webhook()
 
 # sqlite config
 
-@app.route('/' + SECRET, methods=['POST'])
-def webhook():
-    print(request.stream.read().decode('utf-8'))
-    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-    bot.process_new_updates([update])
-    return 'ok', 200
-
-
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
     # print(dict.keys(message._dict_))
@@ -56,12 +48,23 @@ def send_welcome(message):
             if len(keywords) > 0:
                 bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
             else:
-                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta')
+                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
         
     else:
         bot.send_message(message.chat.id, 'Command not allowed')
     # close db
     conn.close()
+
+@app.route('/' + SECRET, methods=['POST'])
+def webhook():
+    print(request.stream.read().decode('utf-8'))
+    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+    bot.process_new_updates([update])
+    return 'ok', 200
+
+@app.route('/')
+def index():
+    return 'Hello World!'
 
 
 # @bot.message_handler(func=lambda m: True)

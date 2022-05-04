@@ -7,7 +7,7 @@ import pandas as pd
 
 from flask import Flask, request
 
-load_dotenv(dotenv_path='../.env')
+load_dotenv(dotenv_path='./.env')
 
 app = Flask(__name__)
 
@@ -17,7 +17,9 @@ SECRET = "9XYLmhbvXF"
 
 URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
 
-bot = telebot.TeleBot(TOKEN, threaded=False)
+# bot = telebot.TeleBot(TOKEN, threaded=False)
+
+bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 bot.remove_webhook()
 bot.set_webhook(url=URL)
 
@@ -66,7 +68,7 @@ def send_welcome(message):
     # print(message)
     # bot.reply_to(message, 'hey!')
 
-#bot.infinity_polling()
+# bot.infinity_polling()
 
 # if (__name__) == "__main__":
 #     app.run()

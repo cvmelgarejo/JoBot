@@ -21,12 +21,13 @@ URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
 
 bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 bot.remove_webhook()
-bot.set_webhook(url=URL)
+# bot.set_webhook(url=URL)
 
 # sqlite config
 
 @app.route('/' + SECRET, methods=['POST'])
 def webhook():
+    print(request.stream.read().decode('utf-8'))
     update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
     bot.process_new_updates([update])
     return 'ok', 200

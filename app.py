@@ -24,6 +24,8 @@ def get_request():
         return '<h1>Hello World!</h1>'
     elif request.method == 'POST':
         print(request.get_json())
+        return 'Sí'
+        
 
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])

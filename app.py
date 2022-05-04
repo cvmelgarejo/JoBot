@@ -13,9 +13,22 @@ app = Flask(__name__)
 
 TOKEN = dotenv_values()['TELEGRAM_TOKEN']
 
-bot = telebot.TeleBot(TOKEN, parse_mode=None)
+SECRET = "9XYLmhbvXF"
+
+URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
+
+bot = telebot.TeleBot(TOKEN, threaded=False)
+bot.remove_webhook()
+bot.add_webhook(url=URL)
 
 # sqlite config
+
+@app.route('/' + SECRET, methods=['POST'])
+def webhook():
+    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+    bot.process_new_updates([update])
+    return 'ok', 200
+
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
@@ -55,14 +68,5 @@ def send_welcome(message):
 
 #bot.infinity_polling()
 
-# intialize flask server
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        
-        return 'ok'
-    else:
-        return 'ok'
-
-if (__name__) == "__main__":
-    app.run(debug=True, port=5001)
+# if (__name__) == "__main__":
+#     app.run()

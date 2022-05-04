@@ -28,12 +28,12 @@ bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 bot.remove_webhook()
 
 app = Flask(__name__)
-@app.route(SECRET + '/remove-webhooks', methods=['GET'])
+@app.route('/remove-webhooks', methods=['GET'])
 def remove_webhooks():
     bot.remove_webhook()
     return 'Webhooks removed'
 
-@app.route(SECRET + '/start', methods=['GET'])
+@app.route('/start', methods=['GET'])
 def start():
     print('starting webhook')
     bot.remove_webhook()
@@ -41,12 +41,12 @@ def start():
     print('webhook started')
     return 'ok'
 
-@app.route('/', methods=['POST'])
-def webhook():
-    print(request.stream.read().decode('utf-8'))
-    # update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-    # bot.process_new_updates([update])
-    return 'ok', 200
+# @app.route('/', methods=['POST'])
+# def webhook():
+#     print(request.stream.read().decode('utf-8'))
+#     # update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+#     # bot.process_new_updates([update])
+#     return 'ok', 200
 
 @app.route('/')
 def index():

@@ -45,20 +45,12 @@ def start():
 def webhook():
     if request.headers.get('content-type') == 'application/json':
         json_string = request.get_data().decode('utf-8')
-        print(json_string)
         update = telebot.types.Update.de_json(json_string)
-        print('update:', update)
         bot.process_new_updates([update])
         return ''
     else:
         abort(403)
 
-@app.route('/')
-def index():
-    print(bot)
-    print(bot.get_me())
-    bot.send_message(chat_id=bot.get_me().id, text='Hello!')
-    return 'Hello World!'
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
@@ -85,11 +77,10 @@ def send_welcome(message):
                 bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
             else:
                 bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
-        
+        # close db
+        conn.close()
     else:
         bot.send_message(message.chat.id, 'Command not allowed')
-    # close db
-    conn.close()
 
 
 # @bot.message_handler(func=lambda m: True)

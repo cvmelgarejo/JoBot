@@ -19,7 +19,7 @@ URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
 
 bot = telebot.TeleBot(TOKEN, threaded=False)
 bot.remove_webhook()
-bot.add_webhook(url=URL)
+bot.set_webhook(url=URL)
 
 # sqlite config
 

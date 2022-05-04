@@ -50,6 +50,8 @@ def start():
 
 @app.route('/')
 def index():
+    print(bot)
+    print(bot.get_me())
     return 'Hello World!'
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])

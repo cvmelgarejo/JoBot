@@ -27,6 +27,7 @@ bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 bot.remove_webhook()
 
 app = Flask(__name__)
+
 @app.route('/remove-webhooks', methods=['GET'])
 def remove_webhooks():
     bot.remove_webhook()
@@ -44,7 +45,9 @@ def start():
 def webhook():
     if request.headers.get('content-type') == 'application/json':
         json_string = request.get_data().decode('utf-8')
+        print(json_string)
         update = telebot.types.Update.de_json(json_string)
+        print('update:', update)
         bot.process_new_updates([update])
         return ''
     else:
@@ -60,7 +63,6 @@ def index():
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
     print(message.chat.id, message.from_user.id)
-    bot.send_message(message.chat.id, 'Hola!')
     # print(dict.keys(message._dict_))
     if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
         conn = sqlite3.connect('./databaseee/tasks.db')

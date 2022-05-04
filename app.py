@@ -19,8 +19,8 @@ print('-'* 50)
 
 SECRET = "9XYLmhbvXF"
 
-# URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
-URL = 'https://femellone.pythonanywhere.com/' + SECRET
+URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
+# URL = 'https://femellone.pythonanywhere.com/' + SECRET
 
 # bot = telebot.TeleBot(TOKEN, threaded=False)
 

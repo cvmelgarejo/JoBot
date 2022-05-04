@@ -3,9 +3,8 @@ import telebot #pip install pyTelegramBotAPI
 
 # make sqlite3 import
 import sqlite3
-import pandas as pd
 
-from flask import Flask, request
+from flask import Flask, request, abort
 
 load_dotenv(dotenv_path='./.env')
 
@@ -41,48 +40,53 @@ def start():
     print('webhook started')
     return 'ok'
 
-# @app.route('/', methods=['POST'])
-# def webhook():
-#     print(request.stream.read().decode('utf-8'))
-#     # update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-#     # bot.process_new_updates([update])
-#     return 'ok', 200
+@app.route('/'+ SECRET, methods=['POST'])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return ''
+    else:
+        abort(403)
 
 @app.route('/')
 def index():
     print(bot)
     print(bot.get_me())
+    bot.send_message(chat_id=bot.get_me().id, text='Hello!')
     return 'Hello World!'
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
+    bot.send_message
     # print(dict.keys(message._dict_))
-    if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
-        conn = sqlite3.connect('./databaseee/tasks.db')
-        c = conn.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS keywords_user (id INTEGER PRIMARY KEY, user_id INTEGER, keyword TEXT)")
+    # if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
+    #     conn = sqlite3.connect('./databaseee/tasks.db')
+    #     c = conn.cursor()
+    #     c.execute("CREATE TABLE IF NOT EXISTS keywords_user (id INTEGER PRIMARY KEY, user_id INTEGER, keyword TEXT)")
 
-        if message.text.startswith('/sub '):
-            keywords = message.text.replace('/sub ', '').split(';')
-            # save keywords_user relation in db
-            for keyword in keywords:
-                c.execute("INSERT INTO keywords_user (user_id, keyword) VALUES (?, ?)", (message.from_user.id, keyword))
-                conn.commit()
+    #     if message.text.startswith('/sub '):
+    #         keywords = message.text.replace('/sub ', '').split(';')
+    #         # save keywords_user relation in db
+    #         for keyword in keywords:
+    #             c.execute("INSERT INTO keywords_user (user_id, keyword) VALUES (?, ?)", (message.from_user.id, keyword))
+    #             conn.commit()
 
-            bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords))
-        elif message.text.startswith('/lista'):
-            c.execute("SELECT keyword FROM keywords_user WHERE user_id = ?", (message.from_user.id,))
-            conn.commit()
-            keywords = c.fetchall()
-            if len(keywords) > 0:
-                bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
-            else:
-                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
+    #         bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords))
+    #     elif message.text.startswith('/lista'):
+    #         c.execute("SELECT keyword FROM keywords_user WHERE user_id = ?", (message.from_user.id,))
+    #         conn.commit()
+    #         keywords = c.fetchall()
+    #         if len(keywords) > 0:
+    #             bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
+    #         else:
+    #             bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
         
-    else:
-        bot.send_message(message.chat.id, 'Command not allowed')
-    # close db
-    conn.close()
+    # else:
+    #     bot.send_message(message.chat.id, 'Command not allowed')
+    # # close db
+    # conn.close()
 
 
 # @bot.message_handler(func=lambda m: True)

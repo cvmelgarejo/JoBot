@@ -16,13 +16,18 @@ TOKEN = dotenv_values()['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(TOKEN, parse_mode=None)
 
 # sqlite config
-bot.set_webhook('https://test-bot-penguin.herokuapp.com', certificate=open('../cert.pem', 'r'))
+# bot.set_webhook('https://test-bot-penguin.herokuapp.com', certificate=open('../cert.pem', 'r'))
+
+@app.route('/scraper', methods=['GET', 'POST'])
+def get_request():
+    if request.method == 'GET':
+        return '<h1>Hello World!</h1>'
+    elif request.method == 'POST':
+        print(request.get_json())
 
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
-
-
     # print(dict.keys(message._dict_))
     if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
         conn = sqlite3.connect('./databaseee/tasks.db')

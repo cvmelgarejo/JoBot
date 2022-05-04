@@ -62,32 +62,32 @@ def send_welcome(message):
     print(message.text)
     bot.send_message(message.chat.id, 'Hola!')
     # print(dict.keys(message._dict_))
-    # if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
-    #     conn = sqlite3.connect('./databaseee/tasks.db')
-    #     c = conn.cursor()
-    #     c.execute("CREATE TABLE IF NOT EXISTS keywords_user (id INTEGER PRIMARY KEY, user_id INTEGER, keyword TEXT)")
+    if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
+        conn = sqlite3.connect('./databaseee/tasks.db')
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS keywords_user (id INTEGER PRIMARY KEY, user_id INTEGER, keyword TEXT)")
 
-    #     if message.text.startswith('/sub '):
-    #         keywords = message.text.replace('/sub ', '').split(';')
-    #         # save keywords_user relation in db
-    #         for keyword in keywords:
-    #             c.execute("INSERT INTO keywords_user (user_id, keyword) VALUES (?, ?)", (message.from_user.id, keyword))
-    #             conn.commit()
+        if message.text.startswith('/sub '):
+            keywords = message.text.replace('/sub ', '').split(';')
+            # save keywords_user relation in db
+            for keyword in keywords:
+                c.execute("INSERT INTO keywords_user (user_id, keyword) VALUES (?, ?)", (message.from_user.id, keyword))
+                conn.commit()
 
-    #         bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords))
-    #     elif message.text.startswith('/lista'):
-    #         c.execute("SELECT keyword FROM keywords_user WHERE user_id = ?", (message.from_user.id,))
-    #         conn.commit()
-    #         keywords = c.fetchall()
-    #         if len(keywords) > 0:
-    #             bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
-    #         else:
-    #             bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
+            bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords))
+        elif message.text.startswith('/lista'):
+            c.execute("SELECT keyword FROM keywords_user WHERE user_id = ?", (message.from_user.id,))
+            conn.commit()
+            keywords = c.fetchall()
+            if len(keywords) > 0:
+                bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
+            else:
+                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
         
-    # else:
-    #     bot.send_message(message.chat.id, 'Command not allowed')
-    # # close db
-    # conn.close()
+    else:
+        bot.send_message(message.chat.id, 'Command not allowed')
+    # close db
+    conn.close()
 
 
 # @bot.message_handler(func=lambda m: True)

@@ -19,7 +19,7 @@ print('-'* 50)
 
 SECRET = "9XYLmhbvXF"
 
-URL = 'https://test-bot-penguin.herokuapp.com/bot' + TOKEN + '/sendMessage?hello=world'
+URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
 # URL = 'https://femellone.pythonanywhere.com/' + SECRET
 
 # bot = telebot.TeleBot(TOKEN, threaded=False)
@@ -27,7 +27,12 @@ URL = 'https://test-bot-penguin.herokuapp.com/bot' + TOKEN + '/sendMessage?hello
 bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 
 app = Flask(__name__)
-@app.route('/start', methods=['GET'])
+@app.route(SECRET + '/remove-webhooks', methods=['GET'])
+def remove_webhooks():
+    bot.remove_webhook()
+    return 'Webhooks removed'
+
+@app.route(SECRET + '/start', methods=['GET'])
 def start():
     print('starting webhook')
     bot.remove_webhook()
@@ -35,11 +40,11 @@ def start():
     print('webhook started')
     return 'ok'
 
-@app.route('/' + SECRET, methods=['POST'])
+@app.route('/', methods=['POST'])
 def webhook():
     print(request.stream.read().decode('utf-8'))
-    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-    bot.process_new_updates([update])
+    # update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+    # bot.process_new_updates([update])
     return 'ok', 200
 
 @app.route('/')

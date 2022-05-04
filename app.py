@@ -59,7 +59,8 @@ def index():
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
-    bot.send_message
+    print(message.text)
+    bot.send_message(message.chat.id, 'Hola!')
     # print(dict.keys(message._dict_))
     # if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
     #     conn = sqlite3.connect('./databaseee/tasks.db')

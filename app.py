@@ -52,11 +52,16 @@ def webhook():
         abort(403)
 
 
-@bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
+@bot.message_handler(commands = ["start", "ayuda"])
+def bienvenida(mensaje):
+    bot.reply_to(mensaje, "Si estás buscando trabajo puedo ayudarte! Sólo tenés que suscribirte con /sub y, a continuación escribir el trabajo que estás buscando 🔎 \n \n 👁 Ejemplo: /sub Administrativo \n \n 👉 Otro ejemplo /sub Contador \n\n 👉 Otro ejemplo /sub Programador. \n \n Después me dejás a cargo que yo te encuentro un trabajo 🤖👍")
+
+
+@bot.message_handler(commands=['sub', 'lista', 'desub'])
 def send_welcome(message):
     print(message.chat.id, message.from_user.id)
     # print(dict.keys(message._dict_))
-    if (len(message.text.split(' ')) > 1 or message.text == '/ayuda' or message.text == '/lista'):
+    if (len(message.text.split(' ')) > 1 or message.text == '/lista'):
         conn = sqlite3.connect('./databaseee/tasks.db')
         c = conn.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS keywords_user (id INTEGER PRIMARY KEY, user_id INTEGER, keyword TEXT)")
@@ -68,7 +73,7 @@ def send_welcome(message):
                 c.execute("INSERT INTO keywords_user (user_id, keyword) VALUES (?, ?)", (message.from_user.id, keyword))
                 conn.commit()
 
-            bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords))
+            bot.send_message(message.chat.id, 'Te suscribiste a las ofertas relacionadas a: ' + ', '.join(keywords) + ", podés usar el comando  /desub para desuscribirte. \n Unos ejemplos de como usarlo:\n /desub Programación \n /desub Trabador social")
         elif message.text.startswith('/lista'):
             c.execute("SELECT keyword FROM keywords_user WHERE user_id = ?", (message.from_user.id,))
             conn.commit()
@@ -76,7 +81,12 @@ def send_welcome(message):
             if len(keywords) > 0:
                 bot.send_message(message.chat.id, 'Tus suscripciones son: ' + ', '.join([keyword[0] for keyword in keywords]))
             else:
-                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta heroku')
+                bot.send_message(message.chat.id, 'No te has suscrito a ninguna oferta')
+        elif message.text.startswith('/desub '):
+        
+            c.execute('delete from keywords_user where user_id=? and keyword=?', (message.from_user.id, message.text.split(" ")[1]))
+            conn.commit()
+            bot.send_message(message.chat.id, 'Se ha anulado tu suscripcion a ' + message.text.split(" ")[1])
         # close db
         conn.close()
     else:

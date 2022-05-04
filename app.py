@@ -25,10 +25,16 @@ URL = 'https://test-bot-penguin.herokuapp.com/bot' + TOKEN + '/sendMessage?hello
 # bot = telebot.TeleBot(TOKEN, threaded=False)
 
 bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
-bot.remove_webhook()
-bot.set_webhook(url=URL)
 
 app = Flask(__name__)
+@app.route('/start', methods=['GET'])
+def start():
+    print('starting webhook')
+    bot.remove_webhook()
+    bot.set_webhook(url=URL)
+    print('webhook started')
+    return 'ok'
+
 @app.route('/' + SECRET, methods=['POST'])
 def webhook():
     print(request.stream.read().decode('utf-8'))

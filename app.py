@@ -25,8 +25,8 @@ URL = 'https://femellone.pythonanywhere.com/' + SECRET
 # bot = telebot.TeleBot(TOKEN, threaded=False)
 
 bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
-bot.remove_webhook()
 bot.set_webhook(url=URL)
+bot.remove_webhook()
 
 app = Flask(__name__)
 @app.route('/' + SECRET, methods=['POST'])

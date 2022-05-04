@@ -25,6 +25,7 @@ URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
 # bot = telebot.TeleBot(TOKEN, threaded=False)
 
 bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
+bot.remove_webhook()
 
 app = Flask(__name__)
 @app.route(SECRET + '/remove-webhooks', methods=['GET'])

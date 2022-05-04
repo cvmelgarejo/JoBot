@@ -9,13 +9,18 @@ from flask import Flask, request
 
 load_dotenv(dotenv_path='./.env')
 
-app = Flask(__name__)
+
 
 TOKEN = dotenv_values()['TELEGRAM_TOKEN']
 
+print('-'* 50)
+print('Token:', TOKEN)
+print('-'* 50)
+
 SECRET = "9XYLmhbvXF"
 
-URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
+# URL = 'https://test-bot-penguin.herokuapp.com/' + SECRET
+URL = 'https://femellone.pythonanywhere.com/' + SECRET
 
 # bot = telebot.TeleBot(TOKEN, threaded=False)
 
@@ -23,7 +28,17 @@ bot = telebot.TeleBot(TOKEN, parse_mode=None, threaded=False)
 bot.remove_webhook()
 bot.set_webhook(url=URL)
 
-# sqlite config
+app = Flask(__name__)
+@app.route('/' + SECRET, methods=['POST'])
+def webhook():
+    print(request.stream.read().decode('utf-8'))
+    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+    bot.process_new_updates([update])
+    return 'ok', 200
+
+@app.route('/')
+def index():
+    return 'Hello World!'
 
 @bot.message_handler(commands=['ayuda', 'sub', 'lista', 'desub'])
 def send_welcome(message):
@@ -54,17 +69,6 @@ def send_welcome(message):
         bot.send_message(message.chat.id, 'Command not allowed')
     # close db
     conn.close()
-
-@app.route('/' + SECRET, methods=['POST'])
-def webhook():
-    print(request.stream.read().decode('utf-8'))
-    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-    bot.process_new_updates([update])
-    return 'ok', 200
-
-@app.route('/')
-def index():
-    return 'Hello World!'
 
 
 # @bot.message_handler(func=lambda m: True)

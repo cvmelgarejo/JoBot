@@ -93,12 +93,12 @@ def send_welcome(message):
         bot.send_message(message.chat.id, 'Command not allowed')
 
 
-# @bot.message_handler(func=lambda m: True)
-# def echo_all(message):
-    # print(message)
-    # bot.reply_to(message, 'hey!')
+@bot.message_handler(func=lambda m: True)
+def echo_all(message):
+    print(message)
+    bot.reply_to(message, 'hey!')
 
-# bot.infinity_polling()
+bot.infinity_polling()
 
-# if (__name__) == "__main__":
-#     app.run()
+if (__name__) == "__main__":
+    app.run()

@@ -33,6 +33,12 @@ def remove_webhooks():
     bot.remove_webhook()
     return 'Webhooks removed'
 
+
+@app.route('/test', methods=['GET'])
+def remove_webhooks():
+    return 'Webhooks removed'
+
+
 @app.route('/start', methods=['GET'])
 def start():
     print('starting webhook')
@@ -40,6 +46,7 @@ def start():
     bot.set_webhook(url=URL)
     print('webhook started')
     return 'ok'
+
 
 @app.route('/'+ SECRET, methods=['POST'])
 def webhook():
@@ -92,13 +99,14 @@ def send_welcome(message):
     else:
         bot.send_message(message.chat.id, 'Command not allowed')
 
+DEBUG = False
+if DEBUG:
+    @bot.message_handler(func=lambda m: True)
+    def echo_all(message):
+        print(message)
+        bot.reply_to(message, 'hey!')
 
-@bot.message_handler(func=lambda m: True)
-def echo_all(message):
-    print(message)
-    bot.reply_to(message, 'hey!')
+    bot.infinity_polling()
 
-bot.infinity_polling()
-
-if (__name__) == "__main__":
-    app.run()
+    if (__name__) == "__main__":
+        app.run()
